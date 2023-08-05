@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 
 import  {ModeToggle}  from '@/components/ModeToggle';
 import { Button } from './ui/button';
+import { MobileSidebar } from './MobileSidebar';
 
 
 const font = Poppins({
@@ -17,9 +18,10 @@ const font = Poppins({
 
 const Navbar = () => {
 	return (
-		<div className='justify-between fixed w-full z-50 border-b border-primary/10 bg-secondary  px-4 py-4 flex'>
+		<div className='justify-between fixed w-full z-50 border-b border-primary/10 bg-secondary  px-4 py-4 flex h-20'>
 			<div className='flex items-center'>
-				<Menu className='block md:hidden' />
+				{/* <Menu className='block md:hidden' /> */}
+                <MobileSidebar />
 				<Link href='/'>
 					<h1
 						className={cn(
