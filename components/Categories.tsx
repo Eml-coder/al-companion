@@ -24,7 +24,7 @@ export const Categories = ({ data }: CategoriesProps) => {
 		router.push(url);
 	};
 	return (
-		<div className='w-full overflow-x-auto space-x-2 flex flex-wrap p-1 gap-5 mx-10 TODO:adjust-categories-bttns-ui'>
+		<div className='overflow-x-aut space-x-2 flex flex-wrap p-1 gap-5 mx-10 w-auto TODO:adjust-categories-bttns-ui'>
 			<button
 				onClick={() => onClick(undefined)}
 				className={cn(
