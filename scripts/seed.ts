@@ -17,16 +17,6 @@ async function main() {
 				{ name: 'History' },
 				{ name: 'Politics' },
 				{ name: 'Technology' },
-				{ name: 'Food' },
-				{ name: 'Art' },
-				{ name: 'Business' },
-				{ name: 'Comedy' },
-				{ name: 'Education' },
-				{ name: 'Fashion' },
-				{ name: 'Health' },
-				{ name: 'Music' },
-				{ name: 'News' },
-				{ name: 'Religion' },
 			],
 		});
 	} catch (error) {
