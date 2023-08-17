@@ -1,5 +1,6 @@
 import Navbar from "@/components/Navbar";
 import { Sidebar } from "@/components/Sidebar";
+
 //try to add a sidebar
 
 const RootLayout = ({
@@ -13,6 +14,7 @@ const RootLayout = ({
             </div>
             <main className='md:pl-20 pt-16 h-full'>
             {children}
+     
             </main>
         </div>
     );

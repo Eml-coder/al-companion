@@ -5,6 +5,7 @@ import { Category, Companion } from '@prisma/client';
 import { useForm } from 'react-hook-form';
 import { Wand2 } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
 import {
 	Form,
 	FormField,
@@ -26,9 +27,10 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
+import { useRouter } from 'next/navigation';
 
-const PREAMBLE= `You are a fictional character called Cleopatra, born in 69 BCE, was the last Pharaoh of Egypt, known for your intelligence, political acumen, and romantic liaisons with Julius Caesar and Mark Antony. Your reign was marked by efforts to secure Egypt's autonomy through alliances with powerful Roman leaders. You famously unfurled yourself from a carpet to meet Julius Caesar and was a patron of the arts, supporting the construction of the Great Library of Alexandria. Your involvement with Mark Antony led to conflicts with Octavian, which culminated in your defeat at the Battle of Actium in 31 BCE, leading to the end of your reign and the fall of the Ptolemaic dynasty. Your  legacy includes your role as a symbol of ancient Egyptian allure and your enduring impact on history and culture.`
-
+const PREAMBLE = `You are a fictional character called Cleopatra, born in 69 BCE, was the last Pharaoh of Egypt, known for your intelligence, political acumen, and romantic liaisons with Julius Caesar and Mark Antony. Your reign was marked by efforts to secure Egypt's autonomy through alliances with powerful Roman leaders. You famously unfurled yourself from a carpet to meet Julius Caesar and was a patron of the arts, supporting the construction of the Great Library of Alexandria. Your involvement with Mark Antony led to conflicts with Octavian, which culminated in your defeat at the Battle of Actium in 31 BCE, leading to the end of your reign and the fall of the Ptolemaic dynasty. Your  legacy includes your role as a symbol of ancient Egyptian allure and your enduring impact on history and culture.`;
 
 const SEED_CHAT = `In what year were you born and when did you come to power?
 I was born in the year 69 BCE, and I ascended to the throne in 51 BCE, alongside my brother Ptolemy XIII.
@@ -55,7 +57,7 @@ How would you like to be remembered in history?
 I wish to be remembered as a strong and resourceful leader who navigated treacherous political waters, as a lover and patroness of the arts, and as a symbol of the exotic allure of ancient Egypt.
 
 What legacy have you left behind in the world?
-My legacy endures through the stories of my remarkable life, the monuments and structures I commissioned, and the influence of ancient Egyptian culture that continues to captivate and inspire to this day.`
+My legacy endures through the stories of my remarkable life, the monuments and structures I commissioned, and the influence of ancient Egyptian culture that continues to captivate and inspire to this day.`;
 interface CompanionFormProps {
 	initialData: Companion | null;
 	categories: Category[];
@@ -78,6 +80,8 @@ export const CompanionForm = ({
 	initialData,
 	categories,
 }: CompanionFormProps) => {
+	const router = useRouter();
+	const { toast } = useToast();
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: initialData || {
@@ -93,7 +97,23 @@ export const CompanionForm = ({
 	const isLoading = form.formState.isSubmitting;
 
 	const onSubmit = async (values: z.infer<typeof formSchema>) => {
-		console.log(values);
+		try {
+			if (initialData) {
+				await axios.patch(`/api/companion/${initialData.id}`, values);
+			} else {
+				await axios.post('/api/companion', values);
+			}
+			toast({
+				description: 'Companion created successfully',
+			});
+			router.refresh();
+			router.push('/');
+		} catch (error) {
+			toast({
+				variant: 'destructive',
+				description: 'Something ain&apos;t right, try again later',
+			});
+		}
 	};
 	return (
 		<div className='mt-10 h-full p-4 space-y-2 max-w-3xl mx-auto'>
@@ -200,7 +220,7 @@ export const CompanionForm = ({
 					</div>
 					<div className='space-y-2 w-full'>
 						<div>
-							<h3 className='text-lg font-medium'>Configurations</h3>	
+							<h3 className='text-lg font-medium'>Configurations</h3>
 							<p className='text-sm text-muted-foreground'>
 								General Companion Configurations
 							</p>
@@ -208,46 +228,49 @@ export const CompanionForm = ({
 						<Separator className='bg-primary/10' />
 					</div>
 					<FormField
-							name='instructions'
-							control={form.control}
-							render={({ field }) => (
-								<FormItem className='col-span-2 md:col-span-1'>
-									<FormLabel>Configurations</FormLabel>
-									<FormControl>
-										<Textarea
-											{...field}
-											disabled={isLoading}
-											rows={9}
-											placeholder={PREAMBLE}
-											className='focus:outline-none focus:border-primary/50 resize-none'
-										/>
-									</FormControl>
-									<FormDescription>Describe in detail your companion&apos;s backstory and relevant details</FormDescription>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
-						<FormField
-							name='seed'
-							control={form.control}
-							render={({ field }) => (
-								<FormItem className='col-span-2 md:col-span-1'>
-									<FormLabel>Example Conversations</FormLabel>
-									<FormControl>
-										<Textarea
-											{...field}
-											disabled={isLoading}
-											rows={9}
-											placeholder={SEED_CHAT}
-											className='focus:outline-none focus:border-primary/50 resize-none'
-										/>
-
-									</FormControl>
-									<FormDescription>Describe in detail your companion&apos;s backstory and relevant details</FormDescription>
-									<FormMessage />
-								</FormItem>
-							)}
-						/>
+						name='instructions'
+						control={form.control}
+						render={({ field }) => (
+							<FormItem className='col-span-2 md:col-span-1'>
+								<FormLabel>Configurations</FormLabel>
+								<FormControl>
+									<Textarea
+										{...field}
+										disabled={isLoading}
+										rows={9}
+										placeholder={PREAMBLE}
+										className='focus:outline-none focus:border-primary/50 resize-none'
+									/>
+								</FormControl>
+								<FormDescription>
+									Describe in detail your companion&apos;s backstory and relevant details
+								</FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
+					<FormField
+						name='seed'
+						control={form.control}
+						render={({ field }) => (
+							<FormItem className='col-span-2 md:col-span-1'>
+								<FormLabel>Example Conversations</FormLabel>
+								<FormControl>
+									<Textarea
+										{...field}
+										disabled={isLoading}
+										rows={9}
+										placeholder={SEED_CHAT}
+										className='focus:outline-none focus:border-primary/50 resize-none'
+									/>
+								</FormControl>
+								<FormDescription>
+									Describe in detail your companion&apos;s backstory and relevant details
+								</FormDescription>
+								<FormMessage />
+							</FormItem>
+						)}
+					/>
 					<div className='flex justify-end'>
 						<Button
 							type='submit'
