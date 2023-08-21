@@ -21,7 +21,7 @@ model Category {
 model Companion {
   id   String @id @default(uuid())
   userId String
-  src String
+  src  String
   name String @db.Text
   description String
   instructions String @db.Text

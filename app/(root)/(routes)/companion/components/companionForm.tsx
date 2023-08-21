@@ -91,6 +91,7 @@ export const CompanionForm = ({
 			src: '',
 			seed: '',
 			categoryId: undefined,
+		
 		},
 	});
 
@@ -111,7 +112,7 @@ export const CompanionForm = ({
 		} catch (error) {
 			toast({
 				variant: 'destructive',
-				description: 'Something ain&apos;t right, try again later',
+				description: 'Something is not right, try again later',
 			});
 		}
 	};

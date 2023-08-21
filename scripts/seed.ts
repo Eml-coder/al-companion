@@ -16,7 +16,7 @@ async function main() {
 				{ name: 'Famous People' },
 				{ name: 'History' },
 				{ name: 'Politics' },
-				{ name: 'Technology' },
+		
 			],
 		});
 	} catch (error) {
