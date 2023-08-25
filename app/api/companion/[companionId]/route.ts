@@ -25,7 +25,7 @@ if (!params.companionId) {
 			data: {
 				categoryId,
 				userId: user.id,
-				// userName: user.firstName,
+				 userName: user.firstName,
 				src,
 				name,
 				description,
