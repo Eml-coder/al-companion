@@ -39,8 +39,8 @@ export const ChatHeader = ({ companion }: ChatHeaderProps) => {
 			toast({
 				description: 'Companion deleted',
 			});
-            router.refresh()
-            router.push('/')
+			router.refresh();
+			router.push('/');
 		} catch (error) {
 			toast({
 				description: 'Failed to delete companion',
